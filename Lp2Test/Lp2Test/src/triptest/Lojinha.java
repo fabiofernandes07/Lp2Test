@@ -7,6 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import static javax.swing.JOptionPane.showMessageDialog;
+
 import java.awt.Color;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -17,12 +19,15 @@ import java.net.Socket;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.ImageIcon;
 
 public class Lojinha extends JFrame implements Runnable {
 
 	private JPanel contentPane;
+	private Seat[] seat;
 
 	/**
 	 * Launch the application.
@@ -90,21 +95,46 @@ public class Lojinha extends JFrame implements Runnable {
 		}
 	}
 
+	
 	private void colocaFunc(JButton jb) {
 
 		jb.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				jb.setBackground(Color.ORANGE);
-
-				Confirmar_Compra frame = new Confirmar_Compra();
-				frame.setVisible(true);
+			public synchronized void actionPerformed(ActionEvent e) {
+				//jb.setBackground(Color.ORANGE);
+				int idSeat = Integer.parseInt(jb.getText());
+				
+				
+				
+				if(seat[idSeat].isFree()) {
+					
+					Socket s;
+					try {
+						s = new Socket("127.0.0.1", 4444);
+						new ModifierT(s, idSeat, 2).start();
+						Process +=1;
+						Confirmar_Compra frame = new Confirmar_Compra(idSeat);
+						frame.setVisible(true);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				else if(seat[idSeat].isInProcess()) {
+					JOptionPane.showMessageDialog(null, "Assento em Processo");
+					
+					
+				}
+				else if(seat[idSeat].isPurchased()) {
+					JOptionPane.showMessageDialog(null, "Assento Indisponível");
+					
+				}
 
 			}
 		});
 	}
 
-	ObjectInputStream input; // comunicaÃ§Ã£o
+	ObjectInputStream input; // comunicação
 	ObjectOutputStream output; // bidirecional
 
 	public Lojinha(Socket socketCliente) throws IOException {
@@ -131,64 +161,110 @@ public class Lojinha extends JFrame implements Runnable {
 		contentPane.add(lblNewLabel_3);
 		
 		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon(Lojinha.class.getResource("/triptest/voo.png")));
-		lblNewLabel.setBounds(10, 256, 704, 251);
+		lblNewLabel.setIcon(new ImageIcon(Lojinha.class.getResource("/triptest/infvoo.PNG")));
+		lblNewLabel.setBounds(76, 252, 633, 298);
 		contentPane.add(lblNewLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setIcon(new ImageIcon(Lojinha.class.getResource("/triptest/plane.png")));
-		lblNewLabel_1.setBounds(568, -5, 646, 512);
-		contentPane.add(lblNewLabel_1);
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.WHITE);
+		panel.setBounds(76, 36, 104, 166);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
+		JButton btnNewButton = new JButton("");
+		btnNewButton.setBackground(Color.GREEN);
+		btnNewButton.setEnabled(false);
+		btnNewButton.setBounds(10, 26, 18, 18);
+		panel.add(btnNewButton);
+		
+		JButton button = new JButton("");
+		button.setEnabled(false);
+		button.setBackground(Color.ORANGE);
+		button.setBounds(10, 55, 18, 18);
+		panel.add(button);
+		
+		JButton button_1 = new JButton("");
+		button_1.setEnabled(false);
+		button_1.setBackground(Color.RED);
+		button_1.setBounds(10, 84, 18, 18);
+		panel.add(button_1);
+		
+		JLabel lblNewLabel_1 = new JLabel("Livre");
+		lblNewLabel_1.setBounds(34, 30, 46, 14);
+		panel.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Processo");
+		lblNewLabel_2.setBounds(34, 59, 60, 14);
+		panel.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_4 = new JLabel("Vendido");
+		lblNewLabel_4.setBounds(38, 84, 46, 14);
+		panel.add(lblNewLabel_4);
+		
+		JButton Sair = new JButton("Sair");
+		Sair.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (Process == 0) 
+					System.exit(0);
+			}
+		});
+		Sair.setBackground(Color.RED);
+		Sair.setBounds(685, 11, 89, 23);
+		contentPane.add(Sair);
 		
 		
 
-		//criarbotao();
+		//criarbotao(socketCliente);
 	}
 
+	public static int Process;
+	
 	@Override
 	public void run() {
+		
+		
 		// TODO Auto-generated method stub
 		criarbotao();
 		while (true) {
 			try {
 				
-				String c = "FON";
+				String c = "";
 				output.writeObject(c);
 				
 				Object lido = input.readObject();
 				
 				if (lido instanceof Seat[]) {
-					Seat[] seat = (Seat[]) lido;
+					seat = (Seat[]) lido;
 					
-					for (int i = 0; i < seat.length; i++) {
-						if (seat[i].isFree()) {
-							System.out.println(i + " ta livre");
-						}
-						else if(seat[i].isPurchased()) {
-							
-							System.out.println(i + " foi comprado");
-						}
-					}
+//					for (int i = 0; i < seat.length; i++) {
+//						if (seat[i].isFree()) {
+//							System.out.println(i + " ta livre");
+//						}
+//						else if(seat[i].isPurchased()) {
+//							
+//							System.out.println(i + " foi comprado");
+//						}
+//					}
 
 					for (int i = 0; i < seat.length; i++) {
 						if (seat[i].isFree()) {
 							botao[i].setBackground(Color.GREEN);
-							repaint();
-							revalidate();
+							
 							
 						} 
 						
 						else if (seat[i].isPurchased()) {
 							botao[i].setBackground(Color.RED);
-							repaint();
-							revalidate();
+							
 						}
 						
 						else if(seat[i].isInProcess()) {
 							botao[i].setBackground(Color.ORANGE);
-							repaint();
-							revalidate();
+							
 						}
+						repaint();
+						revalidate();
 						
 					}
 					
@@ -197,7 +273,7 @@ public class Lojinha extends JFrame implements Runnable {
 			catch (ClassNotFoundException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				// break;
+				break;
 			}
 
 		}

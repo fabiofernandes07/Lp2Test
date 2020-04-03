@@ -9,14 +9,13 @@ import java.io.Serializable;
 public class Seat implements Serializable{
 
     private boolean purchased, inProcess, free;
-    
     private Passageiro passageiro;
 
     public Seat() {
         purchased = false;
         inProcess = false;
         free = true;
-        
+        passageiro = new Passageiro();
         
     }
     

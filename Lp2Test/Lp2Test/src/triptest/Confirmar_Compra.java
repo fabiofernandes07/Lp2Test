@@ -12,6 +12,8 @@ import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.Socket;
 import java.awt.event.ActionEvent;
 
 public class Confirmar_Compra extends JFrame {
@@ -21,24 +23,24 @@ public class Confirmar_Compra extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Confirmar_Compra frame = new Confirmar_Compra();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					Confirmar_Compra frame = new Confirmar_Compra();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
 	 */
-	public Confirmar_Compra() {
-		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public Confirmar_Compra(int idSeat) {
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -55,8 +57,12 @@ public class Confirmar_Compra extends JFrame {
 		JButton btnNewButton = new JButton("SIM!");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				InfPassagem frame = new InfPassagem();
+				
+				Confirmar_Compra.super.dispose();
+				InfPassagem frame = new InfPassagem(idSeat);
 				frame.setVisible(true);
+				
+				
 			}
 		});
 		btnNewButton.setBackground(Color.GREEN);
@@ -66,7 +72,17 @@ public class Confirmar_Compra extends JFrame {
 		JButton btnNewButton_1 = new JButton("N\u00C3O");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				Confirmar_Compra.super.dispose();
+				Socket s;
+				try {
+					s = new Socket("127.0.0.1", 4444);
+					new ModifierT(s, idSeat, 1).start();
+					Lojinha.Process -=1;
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			}
 		});
 		btnNewButton_1.setForeground(Color.WHITE);

@@ -19,13 +19,15 @@ import java.io.IOException;
 import java.net.Socket;
 import java.awt.event.ActionEvent;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JDesktopPane;
 import java.awt.Color;
 
 public class Entrada extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField EntradaText;
+	private JButton btnNewButton;
 
 	/**
 	 * Launch the application.
@@ -60,24 +62,36 @@ public class Entrada extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Digite Seu Nome ");
-		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setBounds(308, 307, 173, 14);
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-		contentPane.add(lblNewLabel);
+		JLabel Texto = new JLabel("Digite Seu Nome ");
+		Texto.setForeground(Color.WHITE);
+		Texto.setBounds(308, 307, 173, 14);
+		Texto.setFont(new Font("Tahoma", Font.BOLD, 14));
+		contentPane.add(Texto);
 		
-		textField = new JTextField();
-		textField.setBounds(256, 332, 217, 28);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		EntradaText = new JTextField();
+		EntradaText.setBounds(256, 332, 217, 28);
+		contentPane.add(EntradaText);
+		EntradaText.setColumns(10);
 		
-		JButton btnNewButton = new JButton("Entrar");
+		
+		
+		btnNewButton = new JButton("Entrar");
 		btnNewButton.setBounds(288, 401, 158, 35);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				  
-				Viagens frame = new Viagens();
-				frame.setVisible(true);
+				
+				
+				if (!EntradaText.getText().equals("")) {
+					Entrada.super.dispose();
+					
+					Viagens frame = new Viagens();
+					frame.setVisible(true);
+					JOptionPane.showMessageDialog(null, "Bem Vindo(a) " + EntradaText.getText());
+					
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Digite Seu Nome");
+				}
 				
 				
 				
@@ -96,4 +110,6 @@ public class Entrada extends JFrame {
 		lblNewLabel_2.setBounds(0, 0, 784, 561);
 		contentPane.add(lblNewLabel_2);
 	}
+	
+	
 }

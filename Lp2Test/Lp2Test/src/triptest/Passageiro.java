@@ -1,30 +1,38 @@
 package triptest;
 
+import java.io.Serializable;
+
 /**
 *
 * @author Miqueias
 */
 
-public class Passageiro {
+public class Passageiro implements Serializable {
 	
 	private String nome;
 	private String sobrenome;
 	private String nacionalidade;
 	private String dataNascimento;
-	private String sexo;
-	private String naturalidade;
+	private String sexo; 
 	private String rg;
-	private Passagem passagem;
 	
-	public Passageiro (String nome, String sobrenome, String nacionalidade, String dataNascimento, String sexo, String naturalidade, String rg, Passagem passagem) {
+	public Passageiro (String nome, String dataNascimento, String rg, String sobrenome, String nacionalidade, String sexo) {
 		this.nome = nome;
 		this.sobrenome = sobrenome;
 		this.nacionalidade = nacionalidade;
 		this.dataNascimento = dataNascimento;
 		this.sexo = sexo;
-		this.naturalidade = naturalidade;
 		this.rg = rg;
-		this.passagem = passagem;
+	}
+	
+	public Passageiro() {
+		nome = "vazio";
+		sobrenome = "vazio";
+		nacionalidade = "vazio";
+		dataNascimento = "vazio";
+		sexo = "vazio";
+		rg = "vazio";
+		
 	}
 
 	public String getNome() {
@@ -67,14 +75,6 @@ public class Passageiro {
 		this.sexo = sexo;
 	}
 
-	public String getNaturalidade() {
-		return naturalidade;
-	}
-
-	public void setNaturalidade(String naturalidade) {
-		this.naturalidade = naturalidade;
-	}
-
 	public String getRg() {
 		return rg;
 	}
@@ -83,12 +83,6 @@ public class Passageiro {
 		this.rg = rg;
 	}
 
-	public Passagem getPassagem() {
-		return passagem;
-	}
-
-	public void setPassagem(Passagem passagem) {
-		this.passagem = passagem;
-	}
+	
 }
 

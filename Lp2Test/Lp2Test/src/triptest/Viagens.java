@@ -135,6 +135,8 @@ public class Viagens extends JFrame {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				Viagens.super.dispose();
+				
 				try {
 					Socket s = new Socket("127.0.0.1", 4444);
 					Lojinha assentos = new Lojinha(s);
